@@ -7,8 +7,11 @@ import { AppController } from './app.controller';
   controllers: [AppController],
   imports: [
     TypeOrmModule.forRoot({
-      type: 'sqlite', database: process.env.DATABASE_PATH ?? 'jobs.sqlite',
-      autoLoadEntities: true, synchronize: true,
+      type: 'sqlite',
+      // Falls back to /tmp/jobs.sqlite on Render or production environments to avoid permission errors
+      database: process.env.DATABASE_PATH ?? (process.env.NODE_ENV === 'production' ? '/tmp/jobs.sqlite' : 'jobs.sqlite'),
+      autoLoadEntities: true,
+      synchronize: true,
     }),
     JobsModule,
   ],
